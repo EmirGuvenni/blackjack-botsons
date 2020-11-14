@@ -1,0 +1,32 @@
+{
+  "name": "blackjack-botsons",
+  "version": "1.0.0",
+  "description": "Blackjack bot for Discord.",
+  "author": "Emir Güvenni",
+  "license": "MIT",
+  "homepage": "https://random.botsons.com",
+  "repository": {
+    "url": "https://github.com/EmirGuvenni/discord-random-bot"
+  },
+  "bugs": {
+    "url": "https://github.com/EmirGuvenni/discord-random-bot/issues"
+  },
+  "main": "src/index.js",
+  "dependencies": {
+    "discord.js": "^12.4.1",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.10.14"
+  },
+  "scripts": {
+    "start": "node .",
+    "pm2": "pm2 start ./ecosystem.config.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "botsons",
+    "bj",
+    "blackjack",
+    "cards"
+  ]
+}
