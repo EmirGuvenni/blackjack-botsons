@@ -6,10 +6,10 @@
   "license": "MIT",
   "homepage": "https://random.botsons.com",
   "repository": {
-    "url": "https://github.com/EmirGuvenni/discord-random-bot"
+    "url": "https://github.com/EmirGuvenni/blackjack-botsons"
   },
   "bugs": {
-    "url": "https://github.com/EmirGuvenni/discord-random-bot/issues"
+    "url": "https://github.com/EmirGuvenni/blackjack-botsons/issues"
   },
   "main": "src/index.js",
   "dependencies": {
