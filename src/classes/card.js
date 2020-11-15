@@ -65,7 +65,22 @@ module.exports = class Card {
             img.push(".png");
             return img.join("");
         }
+        let getValue = () => {
+            switch(value) {
+                case 1:
+                    return "a";
+                case 11:
+                    return 10;
+                case 12:
+                    return 10;
+                case 13:
+                    return 10;
+                default:
+                    return value;
+            }
+        }
 
+        this.value = getValue();
         this.suit = getSuit();
         this.rank = getRank();
         this.img = getCard();
