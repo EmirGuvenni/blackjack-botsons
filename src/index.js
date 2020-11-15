@@ -11,6 +11,7 @@ console.log("Starting Blackjack Botsons...");
     console.log("Logged in");
     client.commands = new Map();
     client.handlers = new Map();
+    client.games = new Map();
     await registerEvents(client, './events');
     await registerCommands(client, './commands');
     await registerHandlers(client, './handlers');
