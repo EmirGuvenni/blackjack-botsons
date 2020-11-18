@@ -5,6 +5,7 @@ This is a Discord bot mainly made for entertainment and education.
 * /bj deal: Deals cards.
 * /bj help: Sends the help embed.
 * /bj invite: Sends a link to bots homepage.
+* /bj join: Join an ongoing game.
 
 ## How to play
 
@@ -12,7 +13,12 @@ This is a Discord bot mainly made for entertainment and education.
 * Click ❌ to stay.
 * Click 🃏 to split.
 * Click 💰 to double down.
-* Click 👋 to join that game.
+
+### Bets
+
+* 💵: 100$
+* 💰: 500$
+* 💎: 1000$
 
 ## Links
 * [Homepage](https://blackjack.botsons.com)
