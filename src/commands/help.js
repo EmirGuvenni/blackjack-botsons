@@ -8,6 +8,7 @@ module.exports = {
             .setTitle("Command list")
             .setDescription([
                 "**deal:** Starts a new game.",
+                "**join:** Join an ongoing game.",
                 "**invite:** Sends a link to bots homepage."
             ]);
         // Send the embed
