@@ -1,10 +1,9 @@
-const embed = require('discord.js').MessageEmbed;
-const Stats = require('../database/models/stats');
+const Embed = require('discord.js').MessageEmbed;
 
 module.exports = {
     run: async(client, message) => {
         // Create the invite embed
-        let invEmbed = new embed()
+        let invEmbed = new Embed()
             .setColor(0xFCFCFC)
             .setTitle("You could invite me from here.")
             .setDescription(process.env.HOMEPAGE);
@@ -12,14 +11,7 @@ module.exports = {
         await message.channel.send(invEmbed);
 
         //  Save stats
-        try {
-            const reqStats = await Stats.findOne();
-            reqStats.invite++;
-            reqStats.save();
-        }
-        catch(err) {
-            client.handlers.get("error")(client, err, __filename);
-        }
+        client.handlers.get("stats")(client, "invite");
     },
     aliases: [],
     description: "send an invite link"
