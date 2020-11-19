@@ -20,6 +20,7 @@ module.exports = {
             catch(err) {
                 client.handlers.get("error")(client, err, __filename);
             }
+            return;
         }
 
         // Save stats
@@ -29,7 +30,7 @@ module.exports = {
             reqStats.save();
         }
         catch(err){
-            client.channels.cache.get("error")(client, err, __filename);
+            client.handlers.get("error")(client, err, __filename);
         }
     },
     description: "reports errors to the developer server"
