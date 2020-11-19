@@ -16,16 +16,5 @@ console.log("Starting Blackjack Botsons...");
     await registerHandlers(client, './handlers');
     // Set bot activity
     await client.user.setActivity("/bj help");
-    // Create a stats document if doesn't already exists
-    if(!await Stats.findOne()){
-        try{
-            const newStats = new Stats();
-            newStats.save();
-            console.log("Created new stats document");
-        }
-        catch(err) {
-            client.handlers.get("error")(client, err, __filename);
-        }
-    }
     console.log("Blackjack Botsons is ready");
 })();

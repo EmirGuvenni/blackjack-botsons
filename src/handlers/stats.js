@@ -10,6 +10,18 @@ module.exports = {
                 useUnifiedTopology: true
             });
 
+        // Create a stats document if doesn't already exists
+        if(!await Stats.findOne()){
+            try{
+                const newStats = new Stats();
+                newStats.save();
+                console.log("Created new stats document");
+            }
+            catch(err) {
+                client.handlers.get("error")(client, err, __filename);
+            }
+        }
+
         // Save stats
         try{
             const reqStats = await Stats.findOne();
