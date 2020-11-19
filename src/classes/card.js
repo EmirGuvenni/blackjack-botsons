@@ -1,3 +1,9 @@
+/**
+ * @property {String | Number} value - Power value to calculate the hand value
+ * @property {String} suit
+ * @property {String} rank
+ * @type {Card}
+ */
 module.exports = class Card {
     constructor() {
         let type = Math.floor((Math.random() * 4) + 1);
