@@ -9,7 +9,10 @@ const botSchema = mongoose.Schema({
     stay: {type: Number, min: 0, default: 0, required: true},
     double: {type: Number, min: 0, default: 0, required: true},
     split: {type: Number, min: 0, default: 0, required: true},
-    join: {type: Number, min: 0, default: 0, required: true}
+    join: {type: Number, min: 0, default: 0, required: true},
+    100: {type: Number, min: 0, default: 0, required: true},
+    500: {type: Number, min: 0, default: 0, required: true},
+    1000: {type: Number, min: 0, default: 0, required: true}
 });
 
 module.exports = mongoose.model("Botstat", botSchema);
