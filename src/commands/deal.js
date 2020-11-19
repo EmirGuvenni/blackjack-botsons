@@ -1,6 +1,5 @@
-const Game = require('../classes/game');
 const Embed = require('discord.js').MessageEmbed;
-const Stats = require('../database/models/stats');
+const {initialize} = require('../controller');
 
 module.exports = {
     run: async(client, message) => {
@@ -16,8 +15,7 @@ module.exports = {
         }
 
         // Register a new game
-        client.games.set(message.channel.id, new Game(client, message));
-        client.games.get(message.channel.id).initialize();
+        await initialize(client, message);
 
         // Save stats
         client.handlers.get("stats")(client, "deal");
