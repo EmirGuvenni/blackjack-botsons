@@ -14,7 +14,7 @@ module.exports = {
         // Send the embed
         await message.channel.send(helpEmbed);
 
-        // Save stat
+        // Save stats
         client.handlers.get("stats")(client, "help");
     },
     aliases: ["commands"],
