@@ -1,7 +1,7 @@
 /**
- * @property {String | Number} value - Power value to calculate the hand value
- * @property {String} suit
- * @property {String} rank
+ * @property {string | number} value - Power value to calculate the hand value
+ * @property {string} suit
+ * @property {string} rank
  * @type {Card}
  */
 module.exports = class Card {
