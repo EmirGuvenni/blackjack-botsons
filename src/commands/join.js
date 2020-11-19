@@ -1,4 +1,5 @@
 const Embed = require('discord.js').MessageEmbed;
+const {join} = require('../controller');
 
 module.exports = {
     run: async(client, message) => {
@@ -25,7 +26,7 @@ module.exports = {
         }
 
         // Add the player
-        game.join(client, message.author);
+        await join(client, message);
 
         // Save stats
         client.handlers.get("stats")(client, "join");
