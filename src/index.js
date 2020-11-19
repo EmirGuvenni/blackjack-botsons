@@ -1,6 +1,5 @@
 require('dotenv').config({path: __dirname + '/.env'});
 const Discord = require('discord.js');
-require('./database/connect_db');
 const client = new Discord.Client({partials: ['MESSAGE']});
 const {registerCommands, registerEvents, registerHandlers} = require('./registry');
 const Stats = require('./database/models/stats');

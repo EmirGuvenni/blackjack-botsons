@@ -1,8 +1,15 @@
+const mongoose = require('mongoose');
 const Stats = require('../database/models/stats');
-const embed = require('discord.js').MessageEmbed;
 
 module.exports = {
     run: async (client, param) => {
+        // Connect to the database
+        await mongoose.connect(process.env.DB_LINK, {
+                useNewUrlParser: true,
+                useFindAndModify: false,
+                useUnifiedTopology: true
+            });
+
         // Save stats
         try{
             const reqStats = await Stats.findOne();
