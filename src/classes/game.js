@@ -10,6 +10,7 @@ module.exports = class Game {
         this.players = new Map();
         this.dealer = [];
         this.bets = [];
+        this.moves = [];
         this.state = "none";
     }
 }
