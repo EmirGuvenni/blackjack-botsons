@@ -5,7 +5,7 @@
  */
 module.exports = class Card {
     constructor() {
-        this.suit = Math.floor((Math.random() * 4) + 1);
+        this.suit = Math.floor(Math.random() * 4);
         this.rank = Math.floor((Math.random() * 13) + 1);
     }
 }
