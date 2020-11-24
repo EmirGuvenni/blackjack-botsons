@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const Stats = require('../database/models/stats');
+const {client} = require('../index');
 
 module.exports = {
-    run: async (client, param) => {
+    run: async (param) => {
         // Connect to the database
         await mongoose.connect(process.env.DB_LINK, {
                 useNewUrlParser: true,

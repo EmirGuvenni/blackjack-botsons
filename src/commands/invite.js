@@ -11,7 +11,7 @@ module.exports = {
         await message.channel.send(invEmbed);
 
         //  Save stats
-        client.handlers.get("stats")(client, "invite");
+        client.handlers.get("stats")("invite");
     },
     aliases: [],
     description: "send an invite link"
