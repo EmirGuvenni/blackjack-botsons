@@ -1,5 +1,4 @@
 const Embed = require('discord.js').MessageEmbed;
-const {leave} = require('../controller');
 
 module.exports = {
     run: async(client, message) => {
@@ -26,10 +25,19 @@ module.exports = {
         }
 
         // Remove the player
-        await leave(client, message);
+        await client.games.get(message.channel.id).players.delete(message.author.id);
+
+        // Send the left message
+        await message.channel.send(`**${message.author.tag}** left the game.`);
+
+        // Remove the game if it's empty
+        if(client.games.get(message.channel.id).players.size === 0) {
+            client.games.delete(message.channel.id);
+            message.channel.send("Game closed.");
+        }
 
         // Save stats
-        client.handlers.get("stats")(client, "leave");
+        client.handlers.get("stats")("leave");
     },
     aliases: ["commands"],
     description: "returns the help list"

@@ -1,5 +1,7 @@
 const Embed = require('discord.js').MessageEmbed;
-const {initialize} = require('../controller');
+const {Game} = require('../classes/game');
+const {Player} = require('../classes/player');
+const {getBets} = require('../classes/game');
 
 module.exports = {
     run: async(client, message) => {
@@ -14,11 +16,15 @@ module.exports = {
             return message.channel.send(errEmbed);
         }
 
-        // Register a new game
-        await initialize(client, message);
+        // Create a new lobby
+        client.games.set(message.channel.id, new Game(client, message));
+        // Set the player
+        client.games.get(message.channel.id).players.set(message.author.id, new Player(message.author));
+
+        await getBets(client, message);
 
         // Save stats
-        client.handlers.get("stats")(client, "deal");
+        client.handlers.get("stats")("deal");
     },
     aliases: ["start"],
     description: "starts a game of blackjack"
