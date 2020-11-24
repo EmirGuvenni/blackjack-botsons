@@ -9,13 +9,14 @@ module.exports = {
             .setDescription([
                 "**deal:** Starts a new game.",
                 "**join:** Join an ongoing game.",
+                "**leave:** Leave the ongoing game.",
                 "**invite:** Sends a link to bots homepage."
             ]);
         // Send the embed
         await message.channel.send(helpEmbed);
 
         // Save stats
-        client.handlers.get("stats")(client, "help");
+        client.handlers.get("stats")("help");
     },
     aliases: ["commands"],
     description: "returns the help list"
