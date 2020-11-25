@@ -10,6 +10,8 @@ module.exports = class Card {
 
         this.suit = suit
         this.rank = rank
+
+        // emoji names
         this.lineF = renderFirst(suit, rank);
         this.lineS = renderSecond(suit);
     }
