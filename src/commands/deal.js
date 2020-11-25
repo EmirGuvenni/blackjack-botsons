@@ -21,7 +21,7 @@ module.exports = {
         // Set the player
         client.games.get(message.channel.id).players.set(message.author.id, new Player(message.author));
 
-        await getBets(client, message);
+        await getBets(message);
 
         // Save stats
         client.handlers.get("stats")("deal");
