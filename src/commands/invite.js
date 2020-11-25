@@ -2,13 +2,11 @@ const Embed = require('discord.js').MessageEmbed;
 
 module.exports = {
     run: async(client, message) => {
-        // Create the invite embed
-        let invEmbed = new Embed()
+        // Send the link embed
+        await message.channel.send(new Embed()
             .setColor(0xFCFCFC)
             .setTitle("You could invite me from here.")
-            .setDescription(process.env.HOMEPAGE);
-        // Send the embed
-        await message.channel.send(invEmbed);
+            .setDescription(process.env.HOMEPAGE));
 
         //  Save stats
         client.handlers.get("stats")("invite");

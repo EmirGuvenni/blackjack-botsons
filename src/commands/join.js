@@ -5,25 +5,19 @@ module.exports = {
     run: async(client, message) => {
         let game = client.games.get(message.channel.id);
         // Check if there's a game on that channel
-        if(!game){
-            // Create an error embed
-            let errEmbed = new Embed()
+        if(!game)
+            return message.channel.send(new Embed()
                 .setColor(0xFF0000)
                 .setTitle("Error")
-                .setDescription("There's no ongoing game on this channel. You could start a new one with command '/bj deal'.");
-            // Send the embed
-            return message.channel.send(errEmbed);
-        }
+                .setDescription("There's no ongoing game on this channel. You could start a new one with command '/bj deal'."));
+
         // Check if the player is already in the game or not
-        else if(game.players.get(message.author.id)){
-            // Create an error embed
-            let errEmbed = new Embed()
+        else if(game.players.get(message.author.id))
+            return message.channel.send(new Embed()
                 .setColor(0xFF0000)
                 .setTitle("Error")
-                .setDescription("You're already in this game.");
-            // Send the embed
-            return message.channel.send(errEmbed);
-        }
+                .setDescription("You're already in this game."));
+
 
         // Add the new player
         await client.games.get(message.channel.id).players.set(message.author.id, new Player(message.author));
