@@ -1,5 +1,4 @@
 const Embed = require('discord.js').MessageEmbed;
-const {getBets} = require('../classes/game');
 const {Player} = require('../classes/player');
 
 module.exports = {
@@ -29,10 +28,6 @@ module.exports = {
         // Add the new player
         await client.games.get(message.channel.id).players.set(message.author.id, new Player(message.author));
         await message.channel.send(`**${client.games.get(message.channel.id).players.get(message.author.id).tag}** has joined the game!`);
-
-        // Check if the game is in "bet" state or not
-        if(client.games.get(message.channel.id).state === "bet")
-            await getBets(client, message);
 
         // Save stats
         client.handlers.get("stats")("join");
