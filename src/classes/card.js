@@ -5,24 +5,25 @@
  */
 module.exports = class Card {
     constructor() {
-        let suit = Math.floor(Math.random() * 4);
         let rank = Math.floor((Math.random() * 13) + 1);
+        let suit = Math.floor(Math.random() * 4);
 
         this.suit = suit
         this.rank = rank
 
         // emoji names
-        this.lineF = renderFirst(suit, rank);
-        this.lineS = renderSecond(suit);
+        this.ranks = renderRank(suit, rank);
+        this.suits = renderSuit(suit);
     }
 }
 
-function renderFirst(suit, rank) {
-    let isRed = false; // false = black, true = red
-
-    // Get the rank
-    if(suit > 1)
-        isRed = true;
+/**
+ * @param {number} suit
+ * @param {number} rank
+ * @return {string}
+ */
+function renderRank(suit, rank) {
+    let isRed = suit > 1;
 
     switch(rank) {
         case 1:
@@ -42,8 +43,12 @@ function renderFirst(suit, rank) {
             else return `b${rank}`;
     }
 }
-function renderSecond(suit) {
-    // Get the suit
+
+/**
+ * @param {number} suit
+ * @return {string}
+ */
+function renderSuit(suit) {
     switch(suit) {
         case 0:
             return "sS";
