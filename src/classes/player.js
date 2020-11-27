@@ -8,29 +8,33 @@ module.exports = {
      * @property {string} tag
      * @property {Array} hand
      * @property {Array} [splitHand]
-     * @property {string} state
+     * @property {boolean} isStand
      * @property {number} cash
      * @property {number} bet
+     * @property {string} stats
      * @type {Player}
      */
-    Player: class Player {
+    Player: class {
         constructor(user) {
             this.tag = user.tag;
             this.hand = [];
             this.splitHand = [];
-            this.state = "none";
+            this.isStand = false;
             this.cash = 1000;
             this.bet = 0;
+            this.stats = "";
         }
     },
     /**
      * Deals a new card
      * @param {TextChannel | DMChannel | NewsChannel} game
      * @param {string} userid
+     * @returns {void}
      */
-    hit: function hit(game, userid) {
+    hit: (game, userid) => {
         let player = client.games.get(game.id).players.get(userid);
-        player.hand.push(Card);
+        player.hand.push(new Card());
+        client.games.get(game.id).done.push(userid);
         game.send(`**${player.tag}:** ✅Hit`);
         client.handlers.get("stats")("hit");
     },
@@ -38,19 +42,22 @@ module.exports = {
      * Sets players stay state to true
      * @param {TextChannel | DMChannel | NewsChannel} game
      * @param {string} userid
+     * @returns {void}
      */
-    stay: function stay(game, userid) {
+    stand: (game, userid) => {
         let player = client.games.get(game.id).players.get(userid);
-        player.isStay = true;
-        game.send(`**${player.tag}:** ❌Stay`);
-        client.handlers.get("stats")("stay");
+        player.isStand = true;
+        client.games.get(game.id).done.push(userid);
+        game.send(`**${player.tag}:** ❌Stand`);
+        client.handlers.get("stats")("stand");
     },
     /**
      * Splits players hand
      * @param {TextChannel | DMChannel | NewsChannel} game
      * @param {string} userid
+     * @returns {void}
      */
-    split: function split(game, userid) {
+    split: (game, userid) => {
         let player = client.games.get(game.id).players.get(userid);
         player.splitHand.push(player.hand.shift());
         client.handlers.get("stats")("split");
@@ -59,14 +66,18 @@ module.exports = {
      * Doubles players bet
      * @param {TextChannel | DMChannel | NewsChannel} game
      * @param {string} userid
+     * @returns {void}
      */
-    double: function double(game, userid) {
+    double: (game, userid) => {
         let player = client.games.get(game.id).players.get(userid);
 
         // Double the bet of the player
-        if(player.cash >= (player.bet *= 2)) {
+        if(player.cash >= player.bet) {
             player.cash -= player.bet;
             player.bet *= 2;
+            player.hand.push(new Card());
+            player.isStand = true;
+            client.games.get(game.id).done.push(userid);
             game.send(`**${player.tag}:** 💰Double Down`);
             client.handlers.get("stats")("double");
         }
@@ -74,7 +85,6 @@ module.exports = {
             client.users.cache.get(userid).send(new Embed()
                 .setColor(0xFF0000)
                 .setTitle("Error")
-                .setDescription("You can't double down. You don't have enough cash.")
-            );
+                .setDescription("You can't double down. You don't have enough cash."));
     }
 }
