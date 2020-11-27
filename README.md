@@ -7,7 +7,7 @@ This is a Discord bot mainly made for entertainment and education.
 * /bj invite: Sends a link to bots homepage.
 * /bj join: Join an ongoing game.
 
-## How to play
+## Controls
 
 * Click ✅ to deal a card.
 * Click ❌ to stay.
@@ -24,3 +24,4 @@ This is a Discord bot mainly made for entertainment and education.
 * [Homepage](https://blackjack.botsons.com)
 * [Report bugs here](https://github.com/EmirGuvenni/blackjack-botsons/issues)
 * [Contact (Discord)](https://discord.gg/72CTRPy)
+* [How to play](https://en.wikipedia.org/wiki/Blackjack)
