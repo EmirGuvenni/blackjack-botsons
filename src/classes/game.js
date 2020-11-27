@@ -1,6 +1,5 @@
 const Embed = require('discord.js').MessageEmbed;
 const Card = require('./card');
-const {hit, stand, split, double} = require("./player");
 const {client} = require('../index');
 
 module.exports = {
@@ -23,7 +22,7 @@ module.exports = {
             this.state = "none";
         }
     },
-    getBets, calcHand
+    getBets,
 }
 
 /**
@@ -50,7 +49,7 @@ async function getBets(arg) {
     let table = [];
     game.players.forEach(player => table.push({name: player.tag, value: `${player.cash}$`, inline: true}));
     // Send the embed and add reactions
-    arg.channel.send(new Embed()
+    await arg.channel.send(new Embed()
         .setColor(0xFCFCFC)
         .setTitle("Place your bets!")
         .setDescription([
@@ -176,7 +175,7 @@ async function deal(arg) {
             if(calcHand(arg.channel.id, playerid) === 21) {
                 let player = game.players.get(playerid);
                 player.isStand = true;
-                player.stats = "Blackjack"
+                player.stats = "Blackjack";
                 game.done.push(playerid);
             }
         });
@@ -196,25 +195,53 @@ async function deal(arg) {
 
         const reactions = emb.createReactionCollector(filter, {time: process.env.TIMEOUT_LIMIT});
 
+
+
         reactions.on('collect', (reaction, user) => {
+            let game = client.games.get(reaction.message.channel.id);
+            let player = game.players.get(user.id);
+            /**
+             * Handles Moves on deal embeds
+             * @param {string} move
+             * @returns {void}
+             */
+            async function setMove(move) {
+                game.done.push(user.id);
+                await arg.channel.send(`**${player.tag}:** ${move}`);
+                client.handlers.get("stats")(`${move.slice(1).toLowerCase()}`);
+            }
+
             switch(reaction.emoji.name) {
                 case '✅':
-                    hit(arg.channel, user.id);
+                    player.hand.push(new Card());
+                    setMove("✅Hit");
+                    // Check if the player is bust
                     if(calcHand(arg.channel.id, user.id) > 21){
-                        let player = client.games.get(arg.channel.id).players.get(user.id);
                         player.stats = "Bust";
                         player.isStand = true;
                     }
-                    console.log(game);
                     break;
                 case '❌':
-                    stand(arg.channel, user.id);
-                    break;
-                case '🃏':
-                    split(arg.channel, user.id);
+                    player.isStand = true;
+                    setMove("❌Stand");
                     break;
                 case '💰':
-                    double(arg.channel, user.id);
+                    // Double the bet of the player
+                    if(player.cash >= player.bet) {
+                        player.cash -= player.bet;
+                        player.bet *= 2;
+                        player.hand.push(new Card());
+                        player.isStand = true;
+                        setMove("💰Double");
+                    }
+                    else
+                        client.users.cache.get(user.id).send(new Embed()
+                            .setColor(0xFF0000)
+                            .setTitle("Error")
+                            .setDescription("You can't double down. You don't have enough cash."));
+                    break;
+                case '🃏':
+
                     break;
             }
             if(game.expected.length === game.done.length)
@@ -229,8 +256,8 @@ async function deal(arg) {
 
         await emb.react('✅');
         await emb.react('❌');
-        await emb.react('🃏');
         await emb.react('💰');
+        await emb.react('🃏');
     });
 }
 
