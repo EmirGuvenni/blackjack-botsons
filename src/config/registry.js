@@ -8,27 +8,24 @@ async function registerCommands() {
     
     for(let file of files) {
         let stat = await fs.lstat(path.join(__dirname, '../commands', file));
-        if(stat.isDirectory())
-            await registerCommands(path.join('../commands', file));
-        else {
-            if(file.endsWith(".js")) {
-                let CommandName = file.substring(0, file.indexOf(".js"));
-                try {
-                    let CommandModule = require(path.join(__dirname, '../commands', file));
-                    if(checkCommandModule(CommandName, CommandModule)) {
-                        if(checkProperties(CommandName, CommandModule)) {
-                            let { aliases } = CommandModule;
-                            client.commands.set(CommandName, CommandModule.run);
-                            if(aliases.length !== 0)
-                                aliases.forEach(alias => client.commands.set(alias, CommandModule.run));
-                        }
+        if(file.endsWith(".js")) {
+            let CommandName = file.substring(0, file.indexOf(".js"));
+            try {
+                let CommandModule = require(path.join(__dirname, '../commands', file));
+                if(checkCommandModule(CommandName, CommandModule)) {
+                    if(checkProperties(CommandName, CommandModule)) {
+                        let { aliases } = CommandModule;
+                        client.commands.set(CommandName, CommandModule.run);
+                        if(aliases.length !== 0)
+                        aliases.forEach(alias => client.commands.set(alias, CommandModule.run));
                     }
                 }
-                catch(err) {
-                    console.log(err);
-                }
+            }
+            catch(err) {
+                console.log(err);
             }
         }
+        
     }
 }
 
@@ -37,20 +34,17 @@ async function registerEvents() {
     
     for(let file of files) {
         let stat = await fs.lstat(path.join(__dirname, '../events', file));
-        if(stat.isDirectory())
-            await registerEvents(path.join('../events', file));
-        else {
-            if(file.endsWith(".js")) {
-                let eventName = file.substring(0, file.indexOf(".js"));
-                try {
-                    let eventModule = require(path.join(__dirname, '../events', file));
-                    client.on(eventName, eventModule.bind(null, client));
-                }
-                catch(err) {
-                    console.log(err);
-                }
+        if(file.endsWith(".js")) {
+            let eventName = file.substring(0, file.indexOf(".js"));
+            try {
+                let eventModule = require(path.join(__dirname, '../events', file));
+                client.on(eventName, eventModule.bind(null, client));
+            }
+            catch(err) {
+                console.log(err);
             }
         }
+        
     }
 }
 
@@ -59,22 +53,19 @@ async function registerHandlers() {
     
     for(let file of files) {
         let stat = await fs.lstat(path.join(__dirname, '../handlers', file));
-        if(stat.isDirectory())
-            await registerHandlers(path.join('../handlers', file));
-        else {
-            if(file.endsWith(".js")) {
-                let handlerName = file.substring(0, file.indexOf(".js"));
-                try {
-                    let handlerModule = require(path.join(__dirname, '../handlers', file));
-                    if(checkModule(handlerName, handlerModule)) {
-                        client.handlers.set(handlerName, handlerModule.run);
-                    }
-                }
-                catch(err) {
-                    console.log(err);
+        if(file.endsWith(".js")) {
+            let handlerName = file.substring(0, file.indexOf(".js"));
+            try {
+                let handlerModule = require(path.join(__dirname, '../handlers', file));
+                if(checkModule(handlerName, handlerModule)) {
+                    client.handlers.set(handlerName, handlerModule.run);
                 }
             }
+            catch(err) {
+                console.log(err);
+            }
         }
+        
     }
 }
 
