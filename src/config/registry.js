@@ -1,19 +1,22 @@
 const fs = require('fs').promises;
 const path = require('path');
 const {checkCommandModule,checkModule, checkProperties} = require('./validate');
+const {client} = require('../index');
+client.commands = new Map();
+client.handlers = new Map();
 
-async function registerCommands(client, dir) {
-    let files = await fs.readdir(path.join(__dirname, dir));
+async function registerCommands() {
+    let files = await fs.readdir(path.join(__dirname, '../commands'));
     
     for(let file of files) {
-        let stat = await fs.lstat(path.join(__dirname, dir, file));
+        let stat = await fs.lstat(path.join(__dirname, '../commands', file));
         if(stat.isDirectory())
-            await registerCommands(client, path.join(dir, file));
+            await registerCommands(path.join('../commands', file));
         else {
             if(file.endsWith(".js")) {
                 let CommandName = file.substring(0, file.indexOf(".js"));
                 try {
-                    let CommandModule = require(path.join(__dirname, dir, file));
+                    let CommandModule = require(path.join(__dirname, '../commands', file));
                     if(checkCommandModule(CommandName, CommandModule)) {
                         if(checkProperties(CommandName, CommandModule)) {
                             let { aliases } = CommandModule;
@@ -31,18 +34,18 @@ async function registerCommands(client, dir) {
     }
 }
 
-async function registerEvents(client, dir) {
-    let files = await fs.readdir(path.join(__dirname, dir));
+async function registerEvents() {
+    let files = await fs.readdir(path.join(__dirname, '../events'));
     
     for(let file of files) {
-        let stat = await fs.lstat(path.join(__dirname, dir, file));
+        let stat = await fs.lstat(path.join(__dirname, '../events', file));
         if(stat.isDirectory())
-            await registerEvents(client, path.join(dir, file));
+            await registerEvents(path.join('../events', file));
         else {
             if(file.endsWith(".js")) {
                 let eventName = file.substring(0, file.indexOf(".js"));
                 try {
-                    let eventModule = require(path.join(__dirname, dir, file));
+                    let eventModule = require(path.join(__dirname, '../events', file));
                     client.on(eventName, eventModule.bind(null, client));
                 }
                 catch(err) {
@@ -53,18 +56,18 @@ async function registerEvents(client, dir) {
     }
 }
 
-async function registerHandlers(client, dir) {
-    let files = await fs.readdir(path.join(__dirname, dir));
+async function registerHandlers() {
+    let files = await fs.readdir(path.join(__dirname, '../handlers'));
     
     for(let file of files) {
-        let stat = await fs.lstat(path.join(__dirname, dir, file));
+        let stat = await fs.lstat(path.join(__dirname, '../handlers', file));
         if(stat.isDirectory())
-            await registerHandlers(client, path.join(dir, file));
+            await registerHandlers(path.join('../handlers', file));
         else {
             if(file.endsWith(".js")) {
                 let handlerName = file.substring(0, file.indexOf(".js"));
                 try {
-                    let handlerModule = require(path.join(__dirname, dir, file));
+                    let handlerModule = require(path.join(__dirname, '../handlers', file));
                     if(checkModule(handlerName, handlerModule)) {
                         client.handlers.set(handlerName, handlerModule.run);
                     }
@@ -77,8 +80,8 @@ async function registerHandlers(client, dir) {
     }
 }
 
-module.exports = {
-    registerEvents, 
-    registerCommands,
-    registerHandlers,
+module.exports = async() => {
+    await registerEvents();
+    await registerCommands();
+    await registerHandlers();
 };
