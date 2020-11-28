@@ -8,7 +8,6 @@ const botSchema = mongoose.Schema({
     hit: {type: Number, min: 0, default: 0, required: true},
     stand: {type: Number, min: 0, default: 0, required: true},
     double: {type: Number, min: 0, default: 0, required: true},
-    split: {type: Number, min: 0, default: 0, required: true},
     join: {type: Number, min: 0, default: 0, required: true},
     leave: {type: Number, min: 0, default: 0, required: true},
     100: {type: Number, min: 0, default: 0, required: true},

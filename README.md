@@ -11,8 +11,7 @@ This is a Discord bot mainly made for entertainment and education.
 
 * Click ✅ to deal a card.
 * Click ❌ to stay.
-* Click 🃏 to split.
-* Click 💰 to double down.
+* Click 💳 to double down.
 
 ### Bets
 
