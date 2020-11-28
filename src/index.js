@@ -8,7 +8,7 @@ const client = new Discord.Client({partials: ['MESSAGE', 'CHANNEL', 'REACTION', 
 // Setup the bot
 (async() => {
     await client.login(process.env.TOKEN);
-    await client.user.setActivity("/bj help");
+    await client.user.setActivity("bjhelp");
     client.games = new Map();
     client.commands = new Map();
     client.handlers = new Map();

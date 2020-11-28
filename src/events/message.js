@@ -4,7 +4,7 @@ module.exports = async(client, message) => {
         return;
 
     // Get message arguments
-    const args = message.content.slice((process.env.PREFIX.length + 1)).trim().split(/ +/);
+    const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/);
     // Get the command argument
     const command = args.shift().toLowerCase();
 
