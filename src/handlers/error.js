@@ -1,4 +1,4 @@
-const Stats = require('../database/models/stats');
+const Stats = require('../models/stats');
 const Embed = require('discord.js').MessageEmbed;
 
 module.exports = {

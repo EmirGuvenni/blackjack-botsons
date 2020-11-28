@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Stats = require('../database/models/stats');
+const Stats = require('../models/stats');
 const {client} = require('../index');
 
 module.exports = {
