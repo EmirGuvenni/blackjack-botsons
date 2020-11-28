@@ -190,7 +190,7 @@ async function deal(arg) {
 
         // Filter incoming reactions
         let filter = (reaction, user) => {
-            return ['✅', '❌', '🃏', '💰'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
+            return ['✅', '❌', '💳'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
         }
 
         const reactions = emb.createReactionCollector(filter, {time: process.env.TIMEOUT_LIMIT});
@@ -208,13 +208,13 @@ async function deal(arg) {
             async function setMove(move) {
                 game.done.push(user.id);
                 await arg.channel.send(`**${player.tag}:** ${move}`);
-                client.handlers.get("stats")(`${move.slice(1).toLowerCase()}`);
+                client.handlers.get("stats")(`${move.toLowerCase()}`);
             }
 
             switch(reaction.emoji.name) {
                 case '✅':
                     player.hand.push(new Card());
-                    setMove("✅Hit");
+                    setMove("Hit");
                     // Check if the player is bust
                     if(calcHand(arg.channel.id, user.id) > 21){
                         player.stats = "Bust";
@@ -223,25 +223,22 @@ async function deal(arg) {
                     break;
                 case '❌':
                     player.isStand = true;
-                    setMove("❌Stand");
+                    setMove("Stand");
                     break;
-                case '💰':
+                case '💳':
                     // Double the bet of the player
                     if(player.cash >= player.bet) {
                         player.cash -= player.bet;
                         player.bet *= 2;
                         player.hand.push(new Card());
                         player.isStand = true;
-                        setMove("💰Double");
+                        setMove("Double");
                     }
                     else
                         client.users.cache.get(user.id).send(new Embed()
                             .setColor(0xFF0000)
                             .setTitle("Error")
                             .setDescription("You can't double down. You don't have enough cash."));
-                    break;
-                case '🃏':
-
                     break;
             }
             if(game.expected.length === game.done.length)
@@ -256,8 +253,7 @@ async function deal(arg) {
 
         await emb.react('✅');
         await emb.react('❌');
-        await emb.react('💰');
-        await emb.react('🃏');
+        await emb.react('💳');
     });
 }
 
@@ -333,7 +329,6 @@ async function restart(arg) {
                 break;
         }
         player.hand = [];
-        player.splitHand = [];
         player.bet = 0;
         player.stats = "";
         player.isStand = false;
@@ -411,26 +406,6 @@ function renderPlayer(game) {
         table.push({
             name: player.tag,
             value: `${lineF}\n${lineS}`,
-            inline: true
-        })
-    });
-    return table;
-}
-
-/**
- * Renders the results of players
- * @param {Game} game
- * @return {any}
- */
-function renderEnd(game) {
-    let table = [];
-    game.bets.forEach((playerid) => {
-        let player = game.players.get(playerid);
-
-        // Add the player into the embed
-        table.push({
-            name: player.tag,
-            value: `**${player.stats}**`,
             inline: true
         })
     });
