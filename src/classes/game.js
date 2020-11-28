@@ -177,6 +177,10 @@ async function deal(arg) {
                 player.isStand = true;
                 player.stats = "Blackjack";
                 game.done.push(playerid);
+
+                // Check if all the players got Blackjack
+                if(game.expected.length === game.done.length)
+                    deal(arg);
             }
         });
     }
@@ -277,11 +281,9 @@ async function endDeal(arg) {
         let playerPower = calcHand(arg.channel.id, playerid);
 
         // Set player stats
-        if(dealerPower > 21 && dealerPower > playerPower && player.stats === "")
-            player.stats = "Win"
-        else if(dealerPower < playerPower && player.stats === "")
+        if((dealerPower > 21 && 21 >= playerPower) || (dealerPower <= 21 && playerPower > dealerPower) && player.stats !== "Bust")
             player.stats = "Win";
-        else if(playerPower < 21 && dealerPower === playerPower && player.stats === "")
+        else if(playerPower <= 21 && dealerPower === playerPower && player.stats === "")
             player.stats = "Push";
         else if(dealerPower > playerPower && player.stats === "")
             player.stats = "Lose"
