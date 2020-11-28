@@ -2,8 +2,6 @@ const fs = require('fs').promises;
 const path = require('path');
 const {checkCommandModule,checkModule, checkProperties} = require('./validate');
 const {client} = require('../index');
-client.commands = new Map();
-client.handlers = new Map();
 
 async function registerCommands() {
     let files = await fs.readdir(path.join(__dirname, '../commands'));
@@ -80,8 +78,10 @@ async function registerHandlers() {
     }
 }
 
-module.exports = async() => {
-    await registerEvents();
-    await registerCommands();
-    await registerHandlers();
-};
+module.exports = {
+    initialize: async() => {
+        await registerEvents();
+        await registerCommands();
+        await registerHandlers();
+    }
+}
