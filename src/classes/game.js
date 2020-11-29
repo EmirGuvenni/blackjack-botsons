@@ -22,7 +22,7 @@ module.exports = {
             this.state = "none";
         }
     },
-    getBets,
+    getBets, deal
 }
 
 /**
@@ -63,7 +63,13 @@ async function getBets(arg) {
                 return ['💵', '💰', '💎'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
             };
 
-            const reactions = emb.createReactionCollector(filter, {time: process.env.TIMEOUT_LIMIT});
+            const reactions = emb.createReactionCollector(filter, {time: 21000});
+
+            let fallCheck = async() => {
+                if(game.state === "bet")
+                    await deal(arg);
+            }
+            setTimeout(fallCheck, 22000);
 
             /**
              * Sets the bet of the player
@@ -197,13 +203,18 @@ async function deal(arg) {
             return ['✅', '❌', '💳'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
         }
 
-        const reactions = emb.createReactionCollector(filter, {time: process.env.TIMEOUT_LIMIT});
+        const reactions = emb.createReactionCollector(filter, {time: 21000});
 
-
+        let fallCheck = async() => {
+            if(game.state === "deal")
+                await deal(arg);
+        }
+        setTimeout(fallCheck, 22000);
 
         reactions.on('collect', (reaction, user) => {
             let game = client.games.get(reaction.message.channel.id);
             let player = game.players.get(user.id);
+
             /**
              * Handles Moves on deal embeds
              * @param {string} move
@@ -220,7 +231,7 @@ async function deal(arg) {
                     player.hand.push(new Card());
                     setMove("Hit");
                     // Check if the player is bust
-                    if(calcHand(arg.channel.id, user.id) > 21){
+                    if(calcHand(arg.channel.id, user.id) > 21) {
                         player.stats = "Bust";
                         player.isStand = true;
                     }
