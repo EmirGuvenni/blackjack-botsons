@@ -139,6 +139,10 @@ async function afkManager(arg) {
         if(!game.done.includes(player)) {
             game.players.delete(player);
             arg.channel.send(`**${client.users.cache.get(player).tag}** was removed from the game due to inactivity.`);
+            for(let i = 0; i < game.bets.length; i++){
+                if(player === game.bets[i])
+                    game.bets.splice(i, 1);
+            }
         }
     }
     // Remove the game if it's empty
