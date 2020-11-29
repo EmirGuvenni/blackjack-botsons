@@ -63,13 +63,13 @@ async function getBets(arg) {
                 return ['💵', '💰', '💎'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
             };
 
-            const reactions = emb.createReactionCollector(filter, {time: 21000});
+            const reactions = emb.createReactionCollector(filter, {time: 36000});
 
             let fallCheck = async() => {
                 if(game.state === "bet")
                     await deal(arg);
             }
-            setTimeout(fallCheck, 22000);
+            setTimeout(fallCheck, 37000);
 
             /**
              * Sets the bet of the player
@@ -203,13 +203,13 @@ async function deal(arg) {
             return ['✅', '❌', '💳'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
         }
 
-        const reactions = emb.createReactionCollector(filter, {time: 21000});
+        const reactions = emb.createReactionCollector(filter, {time: 36000});
 
         let fallCheck = async() => {
             if(game.state === "deal")
                 await deal(arg);
         }
-        setTimeout(fallCheck, 22000);
+        setTimeout(fallCheck, 37000);
 
         reactions.on('collect', (reaction, user) => {
             let game = client.games.get(reaction.message.channel.id);
