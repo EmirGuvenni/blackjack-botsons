@@ -5,9 +5,7 @@ const {client} = require('../index');
 
 async function registerCommands() {
     let files = await fs.readdir(path.join(__dirname, '../commands'));
-    
     for(let file of files) {
-        let stat = await fs.lstat(path.join(__dirname, '../commands', file));
         if(file.endsWith(".js")) {
             let CommandName = file.substring(0, file.indexOf(".js"));
             try {
@@ -25,15 +23,12 @@ async function registerCommands() {
                 console.log(err);
             }
         }
-        
     }
 }
 
 async function registerEvents() {
     let files = await fs.readdir(path.join(__dirname, '../events'));
-    
     for(let file of files) {
-        let stat = await fs.lstat(path.join(__dirname, '../events', file));
         if(file.endsWith(".js")) {
             let eventName = file.substring(0, file.indexOf(".js"));
             try {
@@ -44,15 +39,12 @@ async function registerEvents() {
                 console.log(err);
             }
         }
-        
     }
 }
 
 async function registerHandlers() {
     let files = await fs.readdir(path.join(__dirname, '../handlers'));
-    
     for(let file of files) {
-        let stat = await fs.lstat(path.join(__dirname, '../handlers', file));
         if(file.endsWith(".js")) {
             let handlerName = file.substring(0, file.indexOf(".js"));
             try {
@@ -65,7 +57,6 @@ async function registerHandlers() {
                 console.log(err);
             }
         }
-        
     }
 }
 
