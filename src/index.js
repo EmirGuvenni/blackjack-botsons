@@ -13,7 +13,7 @@ const client = new Discord.Client({partials: ['MESSAGE', 'CHANNEL', 'REACTION', 
     client.commands = new Map();
     client.handlers = new Map();
     // Registers modules
-    require('./config/registry').initialize();
+    await require('./config/registry').initialize();
     console.log("Blackjack Botsons is online");
 })();
 
