@@ -2,10 +2,10 @@
 This is a Discord bot mainly made for entertainment and education.
 
 ## Commands
-* /bj deal: Deals cards.
-* /bj help: Sends the help embed.
-* /bj invite: Sends a link to bots homepage.
-* /bj join: Join an ongoing game.
+* bjdeal: Deals cards.
+* bjhelp: Sends the help embed.
+* bjinvite: Sends a link to bots homepage.
+* bjjoin: Join an ongoing game.
 
 ## Controls
 
