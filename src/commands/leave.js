@@ -18,9 +18,20 @@ module.exports = {
                 .setDescription("You're not in the game."));
 
         // Remove the player
-        await client.games.get(message.channel.id).players.delete(message.author.id);
+        await game.players.delete(message.author.id);
+        for(let player of game.expected) {
+            // Remove players from the game if they're inactive
+            if(!game.done.includes(player)) {
+                game.players.delete(player);
+                message.channel.send(`**${client.users.cache.get(player).tag}** was removed from the game due to inactivity.`);
+                for(let i = 0; i < game.bets.length; i++){
+                    if(player === game.bets[i])
+                        game.bets.splice(i, 1);
+                }
+            }
+        }
 
-        // Send the left message
+        // Send the "left" message
         await message.channel.send(`**${message.author.tag}** left the game.`);
 
         // Remove the game if it's empty
