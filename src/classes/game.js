@@ -288,7 +288,7 @@ async function deal(arg) {
             arg.channel.send(new Embed()
                 .setColor(0xFF0000)
                 .setTitle("Error")
-                .setDescription("I do not have the permission to add reactions")
+                .setDescription("I do not have the permission to add reactions.")
             );
         }
     });
