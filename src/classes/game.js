@@ -120,9 +120,18 @@ async function getBets(arg) {
                     await deal(arg);
             });
 
-            await emb.react('💵');
-            await emb.react('💰');
-            await emb.react('💎');
+            try{
+                await emb.react('💵');
+                await emb.react('💰');
+                await emb.react('💎');
+            }
+            catch(err) {
+                arg.channel.send(new Embed()
+                    .setColor(0xFF0000)
+                    .setTitle("Error")
+                    .setDescription("I do not have the permission to add reactions")
+                );
+            }
         }
     );
 }
@@ -270,9 +279,18 @@ async function deal(arg) {
                 await deal(arg);
         });
 
-        await emb.react('✅');
-        await emb.react('❌');
-        await emb.react('💳');
+        try{
+            await emb.react('✅');
+            await emb.react('❌');
+            await emb.react('💳');
+        }
+        catch(err) {
+            arg.channel.send(new Embed()
+                .setColor(0xFF0000)
+                .setTitle("Error")
+                .setDescription("I do not have the permission to add reactions")
+            );
+        }
     });
 }
 
