@@ -10,11 +10,7 @@ module.exports = {
                 .setDescription(process.env.HOMEPAGE));
         }
         catch(err) {
-            await message.channel.send(new Embed()
-                .setColor(0xFF0000)
-                .setTitle("Error")
-                .setDescription("I do not have the permission to embed links.")
-            );
+            await message.channel.send("Missing permission: Embed links.");
         }
 
         //  Save stats
