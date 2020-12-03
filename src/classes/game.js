@@ -112,6 +112,7 @@ async function getBets(arg) {
     let table = [];
     game.players.forEach(player => table.push({name: player.tag, value: `${player.cash}$`, inline: true}));
     // Send the embed and add reactions
+<<<<<<< HEAD
     await arg.channel.send(new Embed()
         .setColor(0xFCFCFC)
         .setTitle("Place your bets!")
@@ -144,44 +145,98 @@ async function getBets(arg) {
                     game.bets.push(id);
                     client.handlers.get("stats")(bet.toString());
                     return arg.channel.send(`**${player.tag}'s bet:** ${bet}$`);
+=======
+    try{
+        await arg.channel.send(new Embed()
+            .setColor(0xFCFCFC)
+            .setTitle("Place your bets!")
+            .setDescription([
+                '💵: 100$',
+                '💰: 500$',
+                '💎: 1000$'
+            ])
+            .addFields(table)).then(async(emb) => {
+                // Filter incoming reactions
+                let filter = (reaction, user) => {
+                    return ['💵', '💰', '💎'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
+                };
+
+                const reactions = emb.createReactionCollector(filter, {time: 36000});
+
+                let fallCheck = async() => {
+                    if(game.state === "bet")
+                        await deal(arg);
                 }
-                else {
-                    // Send an error embed
-                    return arg.author.send(new Embed()
+                setTimeout(fallCheck, 37000);
+
+                /**
+                 * Sets the bet of the player
+                 * @param {string} id
+                 * @param {number} bet
+                 * @returns {Message}
+                 */
+                function setBet(id, bet) {
+                    let player = game.players.get(id);
+                    if(bet <= player.cash) {
+                        // Set the bet
+                        player.bet = bet;
+                        player.cash -= bet;
+                        game.done.push(id);
+                        game.bets.push(id);
+                        client.handlers.get("stats")(bet.toString());
+                        return arg.channel.send(`**${player.tag}'s bet:** ${bet}$`);
+                    }
+                    else {
+                        // Send an error embed
+                        return arg.author.send(new Embed()
+                            .setColor(0xFF0000)
+                            .setTitle("Error")
+                            .setDescription("Your bet can't be higher than your cash."));
+                    }
+                }
+
+                // deal cards if all players placed their bets
+                reactions.on('collect', (reaction, user) => {
+                    switch(reaction.emoji.name) {
+                        case '💵':
+                            setBet(user.id, 100);
+                            break;
+                        case '💰':
+                            setBet(user.id, 500);
+                            break;
+                        case '💎':
+                            setBet(user.id, 1000);
+                            break;
+                    }
+                    if(game.expected.length === game.done.length)
+                        reactions.stop();
+                });
+
+                // Filter inactive users and deal cards
+                reactions.on('end', async() => {
+                    if(await afkManager(arg) === "deal")
+                        await deal(arg);
+                });
+
+                try{
+                    await emb.react('💵');
+                    await emb.react('💰');
+                    await emb.react('💎');
+>>>>>>> d795c672c8a14c361ea2f245dfcb20c803e19c9e
+                }
+                catch(err) {
+                    arg.channel.send(new Embed()
                         .setColor(0xFF0000)
                         .setTitle("Error")
-                        .setDescription("Your bet can't be higher than your cash."));
+                        .setDescription("I do not have the permission to add reactions")
+                    );
                 }
             }
-
-            // deal cards if all players placed their bets
-            reactions.on('collect', (reaction, user) => {
-                switch(reaction.emoji.name) {
-                    case '💵':
-                        setBet(user.id, 100);
-                        break;
-                    case '💰':
-                        setBet(user.id, 500);
-                        break;
-                    case '💎':
-                        setBet(user.id, 1000);
-                        break;
-                }
-                if(game.expected.length === game.done.length)
-                    reactions.stop();
-            });
-
-            // Filter inactive users and deal cards
-            reactions.on('end', async() => {
-                if(await afkManager(arg) === "deal")
-                    await deal(arg);
-            });
-
-            await emb.react('💵');
-            await emb.react('💰');
-            await emb.react('💎');
-        }
-    );
+        );
+    }
+    catch(err) {
+        await arg.channel.send("Missing permission: Embed links.");
+    }
 }
 
 /**
@@ -252,20 +307,22 @@ async function deal(arg) {
         });
     }
 
-    // Send the embed
-    await arg.channel.send(new Embed()
-        .setColor(0xFCFCFC)
-        .setTitle("The game is on!")
-        .setDescription(`**Dealer:**(${calcHand(arg.channel.id, "dealer")})\n${renderDealer(game)}`)
-        .addFields(renderPlayer(game))).then(async(emb) => {
+    try{
+        // Send the embed
+        await arg.channel.send(new Embed()
+            .setColor(0xFCFCFC)
+            .setTitle("The game is on!")
+            .setDescription(`**Dealer:**(${calcHand(arg.channel.id, "dealer")})\n${renderDealer(game)}`)
+            .addFields(renderPlayer(game))).then(async(emb) => {
 
-        // Filter incoming reactions
-        let filter = (reaction, user) => {
-            return ['✅', '❌', '💳'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
-        }
+            // Filter incoming reactions
+            let filter = (reaction, user) => {
+                return ['✅', '❌', '💳'].includes(reaction.emoji.name) && !game.done.includes(user.id) && game.players.get(user.id);
+            }
 
-        const reactions = emb.createReactionCollector(filter, {time: 36000});
+            const reactions = emb.createReactionCollector(filter, {time: 36000});
 
+<<<<<<< HEAD
         reactions.on('collect', (reaction, user) => {
             let game = client.games.get(reaction.message.channel.id);
             let player = game.players.get(user.id);
@@ -279,52 +336,86 @@ async function deal(arg) {
                 game.done.push(user.id);
                 await arg.channel.send(`**${player.tag}:** ${move}`);
                 client.handlers.get("stats")(`${move.toLowerCase()}`);
+=======
+            let fallCheck = async() => {
+                if(game.state === "deal")
+                    await deal(arg);
+>>>>>>> d795c672c8a14c361ea2f245dfcb20c803e19c9e
             }
+            setTimeout(fallCheck, 37000);
 
-            switch(reaction.emoji.name) {
-                case '✅':
-                    player.hand.push(new Card());
-                    setMove("Hit");
-                    // Check if the player is bust
-                    if(calcHand(arg.channel.id, user.id) > 21) {
-                        player.stats = "Bust";
-                        player.isStand = true;
-                    }
-                    break;
-                case '❌':
-                    player.isStand = true;
-                    setMove("Stand");
-                    break;
-                case '💳':
-                    // Double the bet of the player
-                    if(player.cash >= player.bet) {
-                        player.cash -= player.bet;
-                        player.bet *= 2;
+            reactions.on('collect', (reaction, user) => {
+                let game = client.games.get(reaction.message.channel.id);
+                let player = game.players.get(user.id);
+
+                /**
+                 * Handles Moves on deal embeds
+                 * @param {string} move
+                 * @returns {void}
+                 */
+                async function setMove(move) {
+                    game.done.push(user.id);
+                    await arg.channel.send(`**${player.tag}:** ${move}`);
+                    client.handlers.get("stats")(`${move.toLowerCase()}`);
+                }
+
+                switch(reaction.emoji.name) {
+                    case '✅':
                         player.hand.push(new Card());
+                        setMove("Hit");
+                        // Check if the player is bust
+                        if(calcHand(arg.channel.id, user.id) > 21) {
+                            player.stats = "Bust";
+                            player.isStand = true;
+                        }
+                        break;
+                    case '❌':
                         player.isStand = true;
-                        setMove("Double");
-                    }
-                    else
-                        client.users.cache.get(user.id).send(new Embed()
-                            .setColor(0xFF0000)
-                            .setTitle("Error")
-                            .setDescription("You can't double down. You don't have enough cash."));
-                    break;
+                        setMove("Stand");
+                        break;
+                    case '💳':
+                        // Double the bet of the player
+                        if(player.cash >= player.bet) {
+                            player.cash -= player.bet;
+                            player.bet *= 2;
+                            player.hand.push(new Card());
+                            player.isStand = true;
+                            setMove("Double");
+                        }
+                        else
+                            client.users.cache.get(user.id).send(new Embed()
+                                .setColor(0xFF0000)
+                                .setTitle("Error")
+                                .setDescription("You can't double down. You don't have enough cash."));
+                        break;
+                }
+                if(game.expected.length === game.done.length)
+                    reactions.stop();
+            });
+
+            // Filter inactive users and deal cards
+            reactions.on('end', async() => {
+                if(await afkManager(arg) === "deal")
+                    await deal(arg);
+            });
+
+            try{
+                await emb.react('✅');
+                await emb.react('❌');
+                await emb.react('💳');
             }
-            if(game.expected.length === game.done.length)
-                reactions.stop();
+            catch(err) {
+                arg.channel.send(new Embed()
+                    .setColor(0xFF0000)
+                    .setTitle("Error")
+                    .setDescription("I do not have the permission to add reactions.")
+                );
+            }
         });
-
-        // Filter inactive users and deal cards
-        reactions.on('end', async() => {
-            if(await afkManager(arg) === "deal")
-                await deal(arg);
-        });
-
-        await emb.react('✅');
-        await emb.react('❌');
-        await emb.react('💳');
-    });
+    }
+    catch(err) {
+        await arg.channel.send("Missing permission: Embed links.");
+    }
 }
 
 /**
@@ -355,12 +446,17 @@ async function endDeal(arg) {
             player.stats = "Lose"
     });
 
-    // Send the embed
-    await arg.channel.send(new Embed()
-        .setColor(0xFCFCFC)
-        .setTitle("Results")
-        .setDescription(`**Dealer:**(${calcHand(arg.channel.id, "dealer")})\n${renderDealer(game)}`)
-        .addFields(renderPlayer(game)))
+    try{
+        // Send the embed
+        await arg.channel.send(new Embed()
+            .setColor(0xFCFCFC)
+            .setTitle("Results")
+            .setDescription(`**Dealer:**(${calcHand(arg.channel.id, "dealer")})\n${renderDealer(game)}`)
+            .addFields(renderPlayer(game)));
+    }
+    catch(err) {
+        await arg.channel.send("Missing permission: Embed links.");
+    }
 
     // Restart the game
     await restart(arg);
