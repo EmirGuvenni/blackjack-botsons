@@ -1,7 +1,6 @@
 const Embed = require('discord.js').MessageEmbed;
-const {Game} = require('../classes/game');
-const {Player} = require('../classes/player');
-const {getBets} = require('../classes/game');
+const Game = require('../classes/game');
+const Player = require('../classes/player');
 
 module.exports = {
     run: async(client, message) => {
@@ -17,7 +16,7 @@ module.exports = {
         // Set the player
         client.games.get(message.channel.id).players.set(message.author.id, new Player(message.author));
 
-        await getBets(message);
+        client.emit("getBets", message);
 
         // Save stats
         client.handlers.get("stats")("deal");
