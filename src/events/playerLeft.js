@@ -4,14 +4,17 @@ module.exports = async(client, gameid, userid) => {
     let playerTag = player.tag;
 
     game.players.delete(userid);
+    // Remove from bets
     for(let i = 0; i < game.bets.length; i++) {
         if(userid === game.bets[i])
             game.bets.splice(i, 1);
     }
+    // Remove from expected
     for(let i = 0; i < game.expected.length; i++){
         if(userid === game.expected[i])
             game.expected.splice(i, 1);
     }
+    // Remove from done
     for(let i = 0; i < game.done.length; i++){
         if(userid === game.done[i])
             game.done.splice(i, 1);
