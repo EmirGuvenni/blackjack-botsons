@@ -1,5 +1,5 @@
 const Embed = require('discord.js').MessageEmbed;
-const {Player} = require('../classes/player');
+const Player = require('../classes/player');
 
 module.exports = {
     run: async(client, message) => {
