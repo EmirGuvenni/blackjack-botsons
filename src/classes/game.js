@@ -1,6 +1,68 @@
 const Embed = require('discord.js').MessageEmbed;
-const Card = require('./card');
 const {client} = require('../index');
+
+/**
+ * @property {number} suit
+ * @property {number} rank
+ * @type {Card}
+ */
+class Card {
+    constructor() {
+        let rank = Math.floor((Math.random() * 13) + 1);
+        let suit = Math.floor(Math.random() * 4);
+
+        this.suit = suit
+        this.rank = rank
+
+        // emoji names
+        this.ranks = renderRank(suit, rank);
+        this.suits = renderSuit(suit);
+    }
+}
+
+/**
+ * @param {number} suit
+ * @param {number} rank
+ * @return {string}
+ */
+function renderRank(suit, rank) {
+    let isRed = suit > 1;
+
+    switch(rank) {
+        case 1:
+            if(isRed) return "rA";
+            else return "bA";
+        case 11:
+            if(isRed) return "rJ";
+            else return "bJ";
+        case 12:
+            if(isRed) return "rQ";
+            else return "bQ";
+        case 13:
+            if(isRed) return "rK";
+            else return "bK";
+        default:
+            if(isRed) return `r${rank}`;
+            else return `b${rank}`;
+    }
+}
+
+/**
+ * @param {number} suit
+ * @return {string}
+ */
+function renderSuit(suit) {
+    switch(suit) {
+        case 0:
+            return "sS";
+        case 1:
+            return "sC";
+        case 2:
+            return "sD";
+        case 3:
+            return "sH";
+    }
+}
 
 module.exports = {
     /**
@@ -10,6 +72,7 @@ module.exports = {
      * @property {Array} expected - players that are expected to make a move
      * @property {Array} done - players that made a move
      * @property {string} state
+     * @property {function} timer - AFK managers timer
      * @type {Game}
      */
     Game: class Game {
@@ -64,12 +127,6 @@ async function getBets(arg) {
             };
 
             const reactions = emb.createReactionCollector(filter, {time: 36000});
-
-            let fallCheck = async() => {
-                if(game.state === "bet")
-                    await deal(arg);
-            }
-            setTimeout(fallCheck, 37000);
 
             /**
              * Sets the bet of the player
@@ -138,7 +195,7 @@ async function afkManager(arg) {
         // Remove players from the game if they're inactive
         if(!game.done.includes(player)) {
             game.players.delete(player);
-            arg.channel.send(`**${client.users.cache.get(player).tag}** was removed from the game due to inactivity.`);
+            await arg.channel.send(`**${client.users.cache.get(player).tag}** was removed from the game due to inactivity.`);
             for(let i = 0; i < game.bets.length; i++){
                 if(player === game.bets[i])
                     game.bets.splice(i, 1);
@@ -148,7 +205,7 @@ async function afkManager(arg) {
     // Remove the game if it's empty
     if(game.players.size === 0) {
         client.games.delete(arg.channel.id);
-        arg.channel.send("Game closed.");
+        await arg.channel.send("Game closed.");
     }
     else return "deal";
 }
@@ -208,12 +265,6 @@ async function deal(arg) {
         }
 
         const reactions = emb.createReactionCollector(filter, {time: 36000});
-
-        let fallCheck = async() => {
-            if(game.state === "deal")
-                await deal(arg);
-        }
-        setTimeout(fallCheck, 37000);
 
         reactions.on('collect', (reaction, user) => {
             let game = client.games.get(reaction.message.channel.id);
