@@ -19,7 +19,7 @@ module.exports = async(client, gameid, userid) => {
     await channel.send(`**${playerTag}** left the game.`);
 
     // Remove the game if it's empty
-    if(client.games.get(gameid).players.size === 0) {
+    if(game.players.size === 0) {
         client.games.delete(gameid);
         channel.send("Game closed.");
     }
