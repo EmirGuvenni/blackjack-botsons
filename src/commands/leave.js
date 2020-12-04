@@ -2,6 +2,7 @@ const Embed = require('discord.js').MessageEmbed;
 
 module.exports = {
     run: async(client, message) => {
+        message.delete();
         let game = client.games.get(message.channel.id);
         // Check if there's a game on that channel
         if(!game)
