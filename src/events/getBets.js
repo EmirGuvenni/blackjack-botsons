@@ -12,10 +12,6 @@ module.exports = async(client, arg) => {
 
     game.state = "bet";
     game.done = [];
-    game.expected = [];
-    for(let player of game.players.keys()) {
-        game.expected.push(player)
-    }
 
     let table = [];
     game.players.forEach(player => table.push({name: player.tag, value: `${player.cash}$`, inline: true}));
@@ -23,11 +19,7 @@ module.exports = async(client, arg) => {
     await arg.channel.send(new Embed()
         .setColor(0xFCFCFC)
         .setTitle("Place your bets!")
-        .setDescription([
-            '💵: 100$',
-            '💰: 500$',
-            '💎: 1000$'
-        ])
+        .setDescription(['💵: 100$', '💰: 500$', '💎: 1000$'])
         .addFields(table)).then(async(emb) => {
             // Filter incoming reactions
             let filter = (reaction, user) => {
@@ -75,7 +67,7 @@ module.exports = async(client, arg) => {
                         setBet(user.id, 1000);
                         break;
                 }
-                if(game.expected.length === game.done.length)
+                if(game.bets.length === game.players.size)
                     reactions.stop();
             });
 
@@ -83,7 +75,6 @@ module.exports = async(client, arg) => {
             reactions.on('end', async() => {
                 if(await afkManager(arg) === "deal")
                     client.emit("deal", arg);
-                    //await deal(arg);
             });
 
             await emb.react('💵');

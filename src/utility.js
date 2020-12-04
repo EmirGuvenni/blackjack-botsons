@@ -4,29 +4,20 @@ module.exports = {
     /**
      * Removes inactive games and players
      * @param {Message | MessageReaction} arg
-     * @returns {Promise<string | undefined>}
+     * @returns {Promise<string | void>}
      */
     afkManager: async(arg) => {
         let game = client.games.get(arg.channel.id);
         if(!game) return;
 
-        for(let player of game.expected) {
+        for(let player of game.bets) {
             // Remove players from the game if they're inactive
             if(!game.done.includes(player)) {
-                game.players.delete(player);
-                await arg.channel.send(`**${client.users.cache.get(player).tag}** was removed from the game due to inactivity.`);
-                for(let i = 0; i < game.bets.length; i++) {
-                    if(player === game.bets[i])
-                        game.bets.splice(i, 1);
-                }
+                client.emit("playerLeft", arg.channel.id, player);
             }
         }
-        // Remove the game if it's empty
-        if(game.players.size === 0) {
-            client.games.delete(arg.channel.id);
-            await arg.channel.send("Game closed.");
-        }
-        else return "deal";
+        // Check if the game is empty
+        if(game.players.size !== 0 && game) return "deal";
     },
     /**
      * Calculate the hand value

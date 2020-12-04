@@ -6,12 +6,11 @@ module.exports = async(client, arg) => {
     let game = await client.games.get(arg.channel.id);
     game.state = "deal";
     game.done = [];
-    game.expected = [];
-    for(let player of game.bets) {
-        if(!game.players.get(player).isStand)
-            game.expected.push(player);
+    for(let playerid of game.bets) {
+        if(game.players.get(playerid).isStand)
+            game.done.push(playerid);
     }
-    if(game.expected.length === 0)
+    if(game.bets.length === game.done.length)
         return client.emit("endDeal", arg);
 
     // check if it's the first deal
@@ -33,8 +32,8 @@ module.exports = async(client, arg) => {
                 game.done.push(playerid);
 
                 // Check if all the players got Blackjack
-                if(game.expected.length === game.done.length)
-                    deal(arg);
+                if(game.bets.length === game.done.length)
+                    client.emit("deal", arg);
             }
         });
     }
@@ -98,7 +97,7 @@ module.exports = async(client, arg) => {
                             .setDescription("You can't double down. You don't have enough cash."));
                     break;
             }
-            if(game.expected.length === game.done.length)
+            if(game.bets.length === game.done.length)
                 reactions.stop();
         });
 
@@ -106,7 +105,7 @@ module.exports = async(client, arg) => {
         reactions.on('end', async() => {
             if(await afkManager(arg) === "deal")
                 client.emit("deal", arg);
-                //await deal(arg);
+            console.log(game);
         });
 
         await emb.react('✅');
