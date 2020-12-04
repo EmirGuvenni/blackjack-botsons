@@ -17,7 +17,7 @@ module.exports = async(client, arg) => {
         let playerPower = calcHand(arg.channel.id, playerid);
 
         // Set player stats
-        if((dealerPower > 21 && 21 >= playerPower) || (dealerPower <= 21 && playerPower > dealerPower) && player.stats !== "Bust")
+        if((dealerPower > 21 && 21 >= playerPower) || (dealerPower <= 21 && playerPower > dealerPower) && player.stats !== "Bust" && player.stats !== "Blackjack")
             player.stats = "Win";
         else if(playerPower <= 21 && dealerPower === playerPower && player.stats === "")
             player.stats = "Push";
