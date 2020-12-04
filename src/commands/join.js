@@ -3,7 +3,7 @@ const Player = require('../classes/player');
 
 module.exports = {
     run: async(client, message) => {
-        message.delete();
+        await message.delete();
         let game = client.games.get(message.channel.id);
         // Check if there's a game on that channel
         if(!game)

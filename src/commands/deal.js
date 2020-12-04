@@ -4,7 +4,7 @@ const Player = require('../classes/player');
 
 module.exports = {
     run: async(client, message) => {
-        message.delete();
+        await message.delete();
         // Check if there's a game on that channel
         if(client.games.get(message.channel.id))
             return message.channel.send(new Embed()
