@@ -19,10 +19,9 @@ module.exports = {
                 .setTitle("Error")
                 .setDescription("You're already in this game."));
 
-
         // Add the new player
-        await client.games.get(message.channel.id).players.set(message.author.id, new Player(message.author));
-        await message.channel.send(`**${client.games.get(message.channel.id).players.get(message.author.id).tag}** has joined the game!`);
+        await game.players.set(message.author.id, new Player(message.author));
+        await message.channel.send(`**${game.players.get(message.author.id).tag}** has joined the game!`);
 
         // Save stats
         client.handlers.get("stats")("join");
