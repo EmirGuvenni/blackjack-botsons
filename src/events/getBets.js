@@ -67,7 +67,7 @@ module.exports = async(client, arg) => {
                         setBet(user.id, 1000);
                         break;
                 }
-                if(game.bets.length === game.players.size)
+                if(game.bets.length === (game.players.size - game.join.length))
                     reactions.stop();
             });
 

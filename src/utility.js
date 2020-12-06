@@ -10,12 +10,12 @@ module.exports = {
         let game = client.games.get(arg.channel.id);
         if(!game) return;
 
-        for(let player of game.bets) {
+        game.players.forEach((player) => {
             // Remove players from the game if they're inactive
-            if(!game.done.includes(player)) {
-                client.emit("playerLeft", arg.channel.id, player);
+            if(!game.done.includes(player.id) && !game.join.includes(player.id)) {
+                client.emit("playerLeft", arg.channel.id, player.id);
             }
-        }
+        });
         // Check if the game is empty
         if(game.players.size !== 0 && game) return "deal";
     },
